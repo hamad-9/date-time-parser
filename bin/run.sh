@@ -1,2 +1,6 @@
 #!/bin/bash
-./build/date-time-parser
+rm -rf build
+mkdir -p build && cd build
+cmake ..
+cmake --build .
+./DateTimeParser
