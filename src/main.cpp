@@ -1,34 +1,49 @@
-#include <string>
-#include <vector>
+#include <fstream>
 #include <iostream>
+#include <algorithm>
+#include <vector>
 #include "utils.h"
 using namespace std;
 
-int main()
-{
-    cout << "2021-01-10T10:11:00 Epoch time: " << parseDateTimeToEpoch("2021-01-10T10:11:00") << endl;
 
-    cout << "T10:30:00 Epoch time: " << parseDateTimeToEpoch("T10:30:00") << endl;
+const string INPUT_FILE = "input.txt";
+const string OUTPUT_FILE = "output.txt";
 
-    cout << "2023-12-12 Epoch time: " << parseDateTimeToEpoch("2023-12-12") << endl;
 
-    cout << "XXXX-12-12T10:08:00 Epoch time: " << parseDateTimeToEpoch("XXXX-12-12T10:08:00") << endl;
 
-    cout << "2023-XX-12T10:11:00 Epoch time: " << parseDateTimeToEpoch("2023-XX-12T10:11:00") << endl;
+int main() {
 
-    cout << "1970-1-XT00:00:00 Epoch time: " << parseDateTimeToEpoch("1970-1-XT00:00:00") << endl;
+    ifstream inputFile(INPUT_FILE);
+    if (!inputFile.is_open()) {
+        cerr << "Failed to open input file '" << INPUT_FILE << "'." << endl;
+        return 1;
+    }
 
-    cout << "2022-12-12T10:XX:00 Epoch time: " << parseDateTimeToEpoch("2022-12-12T10:XX:00") << endl;
+    ofstream outputFile(OUTPUT_FILE);
+    if (!outputFile.is_open()) {
+        cerr << "Failed to open output file '" << OUTPUT_FILE << "'." << endl;
+        return 1;
+    }
 
-    cout << "2022-12-12T10:XX:XX Epoch time: " << parseDateTimeToEpoch("2022-12-12T10:XX:XX") << endl;
+    vector<pair<long long, string>> dateTimeEpochPairs;
+    string line;
 
-    cout << "XXXX-12-12T10:XX:00 Epoch time: " << parseDateTimeToEpoch("XXXX-12-12T10:XX:00") << endl;
+    while (getline(inputFile, line)) {
+        long long epochTime = parseDateTimeToEpoch(line);
+        dateTimeEpochPairs.emplace_back(epochTime, line);
+    }
 
-    cout << "XXXX-XX-XXTXX:XX:XX Epoch time: " << parseDateTimeToEpoch("XXXX-XX-XXTXX:XX:XX") << endl;
+    // Sort by epoch time
+    sort(dateTimeEpochPairs.begin(), dateTimeEpochPairs.end());
 
-    cout << "XXXX-XX-XX Epoch time: " << parseDateTimeToEpoch("XXXX-XX-XX") << endl;
+    for (const auto &pair : dateTimeEpochPairs) {
+        outputFile << pair.second << " Epoch time: " << pair.first << endl;
+    }
 
-    cout << "TXX:XX:XX Epoch time: " << parseDateTimeToEpoch("TXX:XX:XX") << endl;
+    inputFile.close();
+    outputFile.close();
+
+    cout<<"Finished Successfully"<<endl;
 
     return 0;
 }
