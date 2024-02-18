@@ -1,0 +1,19 @@
+name: run and test the project on macOS
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: brew install cmake
+
+    - name: Build and run project
+      run: ./bin/run.sh
+
+    - name: Run tests
+      run: ./bin/test.sh
