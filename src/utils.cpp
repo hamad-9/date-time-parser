@@ -41,16 +41,7 @@ bool validDateTimeFormat(string &value)
     return true;
 }
 
-bool undefinedShortPart(string &value)
-{
-    if (value.empty() || value == "X" || value == "XX")
-    {
-        return true;
-    }
-    return false;
-}
-
-bool undefinedLongPart(string &value)
+bool undefined(string &value)
 {
     if (value.empty() || value == "X" || value == "XX" || value == "XXXX")
     {
@@ -76,7 +67,7 @@ long long parseDateTimeToEpoch(const string &dateTime)
     {
         string yearStr = datePart.substr(0, firstDash);
 
-        if (!undefinedLongPart(yearStr))
+        if (!undefined(yearStr))
         {
             year = stoi(yearStr);
         }
@@ -85,13 +76,13 @@ long long parseDateTimeToEpoch(const string &dateTime)
         {
             string monthStr = datePart.substr(firstDash + 1, secondDash - firstDash - 1);
 
-            if (!undefinedShortPart(monthStr))
+            if (!undefined(monthStr))
             {
                 month = stoi(monthStr);
             }
 
             string dayStr = datePart.substr(secondDash + 1);
-            if (!undefinedShortPart(dayStr))
+            if (!undefined(dayStr))
             {
                 day = stoi(dayStr);
             }
@@ -105,7 +96,7 @@ long long parseDateTimeToEpoch(const string &dateTime)
     if (firstColon != string::npos)
     {
         string hourStr = timePart.substr(0, firstColon);
-        if (!undefinedShortPart(hourStr))
+        if (!undefined(hourStr))
         {
             hour = stoi(hourStr);
         }
@@ -113,13 +104,13 @@ long long parseDateTimeToEpoch(const string &dateTime)
         if (secondColon != string::npos)
         {
             string minuteStr = timePart.substr(firstColon + 1, secondColon - firstColon - 1);
-            if (!undefinedShortPart(minuteStr))
+            if (!undefined(minuteStr))
             {
                 minute = stoi(minuteStr);
             }
 
             string secondStr = timePart.substr(secondColon + 1);
-            if (!undefinedShortPart(secondStr))
+            if (!undefined(secondStr))
             {
                 second = stoi(secondStr);
             }

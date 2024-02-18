@@ -9,9 +9,7 @@ int daysSinceEpoch(int year, int month, int day);
 
 bool validDateTimeFormat(std::string &value);
 
-bool undefinedShortPart(std::string &value);
-
-bool undefinedLongPart(std::string &value);
+bool undefined(std::string &value);
 
 long long parseDateTimeToEpoch(const std::string &dateTime);
 
