@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 include_directories(include)
 
 # Add the executable
-add_executable(DateTimeParser src/main.cpp src/utils.cpp)
+add_executable(DateTimeParser src/main.cpp src/utils.cpp src/DateTime.cpp)
 
 enable_testing()
 add_subdirectory(tests)
