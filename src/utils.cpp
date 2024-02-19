@@ -29,6 +29,13 @@ bool isLeapYear(int year)
     return (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
 }
 
+int daysInMonth(int month, int year)
+{
+    if (month == 2 && isLeapYear(year))
+        return 29;
+    return DAYS_PER_MONTH[month - 1];
+}
+
 int daysSinceEpoch(int year, int month, int day)
 {
     int days = 0;
@@ -52,101 +59,26 @@ int daysSinceEpoch(int year, int month, int day)
     return days;
 }
 
-bool validDateTimeFormat(string &value)
+// int daysSinceEpoch(int year, int month, int day)
+// {
+//     int leapYears = ((year - 1) / 4) - ((year - 1) / 100) + ((year - 1) / 400) - ((EPOCH_START_YEAR - 1) / 4) + ((EPOCH_START_YEAR - 1) / 100) - ((EPOCH_START_YEAR - 1) / 400);
+
+//     int totalDays = (year - EPOCH_START_YEAR) * 365 + leapYears;
+
+//     for (int m = 1; m < month; m++) {
+//         totalDays += daysInMonth(m, year);
+//     }
+
+//     totalDays += day - 1;
+
+//     return totalDays;
+// }
+
+
+void quickSort(std::vector<DateTime> &arr, int low, int high)
 {
-    return true;
-}
-
-bool undefined(string &value)
-{
-    if (value.empty() || value == "X" || value == "XX" || value == "XXXX")
+    if (low < high)
     {
-        return true;
-    }
-    return false;
-}
-
-long long parseDateTimeToEpoch(const string &dateTime)
-{
-    int year = EPOCH_START_YEAR; 
-    int month = EPOCH_START_MONTH; 
-    int day = EPOCH_START_DAY;
-    int hour = EPOCH_START_HOUR;
-    int minute = EPOCH_START_MINUTE;
-    int second = EPOCH_START_SECOND;
-
-    // Find 'T' to split date and time
-    int tPos = dateTime.find(TimeBegin);
-    string datePart = dateTime.substr(0, tPos);
-    string timePart = tPos != string::npos ? dateTime.substr(tPos + 1) : "";
-
-    // Process date part
-    int firstDash = datePart.find(DateSeparator);
-    int secondDash = datePart.find(DateSeparator, firstDash + 1);
-
-    if (firstDash != string::npos)
-    {
-        string yearStr = datePart.substr(0, firstDash);
-
-        if (!undefined(yearStr))
-        {
-            year = stoi(yearStr);
-        }
-
-        if (secondDash != string::npos)
-        {
-            string monthStr = datePart.substr(firstDash + 1, secondDash - firstDash - 1);
-
-            if (!undefined(monthStr))
-            {
-                month = stoi(monthStr);
-            }
-
-            string dayStr = datePart.substr(secondDash + 1);
-            if (!undefined(dayStr))
-            {
-                day = stoi(dayStr);
-            }
-        }
-    }
-
-    // Process time part
-    int firstColon = timePart.find(TimeSeparator);
-    int secondColon = timePart.find(TimeSeparator, firstColon + 1);
-
-    if (firstColon != string::npos)
-    {
-        string hourStr = timePart.substr(0, firstColon);
-        if (!undefined(hourStr))
-        {
-            hour = stoi(hourStr);
-        }
-
-        if (secondColon != string::npos)
-        {
-            string minuteStr = timePart.substr(firstColon + 1, secondColon - firstColon - 1);
-            if (!undefined(minuteStr))
-            {
-                minute = stoi(minuteStr);
-            }
-
-            string secondStr = timePart.substr(secondColon + 1);
-            if (!undefined(secondStr))
-            {
-                second = stoi(secondStr);
-            }
-        }
-    }
-
-    int days = daysSinceEpoch(year, month, day);
-
-    long long totalSeconds = days * SECONDS_PER_DAY + hour * SECONDS_PER_HOUR + minute * SECONDS_PER_MINUTE + second;
-
-    return totalSeconds;
-}
-
-void quickSort(std::vector<DateTime>& arr, int low, int high) {
-    if (low < high) {
         int pivot = partition(arr, low, high);
 
         quickSort(arr, low, pivot - 1);
@@ -154,16 +86,30 @@ void quickSort(std::vector<DateTime>& arr, int low, int high) {
     }
 }
 
-int partition(std::vector<DateTime>& arr, int low, int high) {
+int partition(std::vector<DateTime> &arr, int low, int high)
+{
     DateTime pivot = arr[high];
     int i = (low - 1);
 
-    for (int j = low; j <= high - 1; j++) {
-        if (arr[j] < pivot) {
+    for (int j = low; j <= high - 1; j++)
+    {
+        if (arr[j] < pivot)
+        {
             i++;
             swap(arr[i], arr[j]);
         }
     }
     swap(arr[i + 1], arr[high]);
     return (i + 1);
+}
+
+long long dateTimeToEpoch(const DateTime &dateTime)
+{
+    int days = daysSinceEpoch(
+        dateTime.getYear(),
+        dateTime.getMonth(),
+        dateTime.getDay());
+
+    long long totalSeconds = days * SECONDS_PER_DAY + dateTime.getHour() * SECONDS_PER_HOUR + dateTime.getMinute() * SECONDS_PER_MINUTE + dateTime.getSecond();
+    return totalSeconds;
 }
