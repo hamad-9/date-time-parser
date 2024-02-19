@@ -2,6 +2,7 @@
 #include <vector>
 #include <iostream>
 #include "utils.h"
+#include "DateTime.h"
 using namespace std;
 
 const int SECONDS_PER_MINUTE = 60;
@@ -142,4 +143,27 @@ long long parseDateTimeToEpoch(const string &dateTime)
     long long totalSeconds = days * SECONDS_PER_DAY + hour * SECONDS_PER_HOUR + minute * SECONDS_PER_MINUTE + second;
 
     return totalSeconds;
+}
+
+void quickSort(std::vector<DateTime>& arr, int low, int high) {
+    if (low < high) {
+        int pivot = partition(arr, low, high);
+
+        quickSort(arr, low, pivot - 1);
+        quickSort(arr, pivot + 1, high);
+    }
+}
+
+int partition(std::vector<DateTime>& arr, int low, int high) {
+    DateTime pivot = arr[high];
+    int i = (low - 1);
+
+    for (int j = low; j <= high - 1; j++) {
+        if (arr[j] < pivot) {
+            i++;
+            swap(arr[i], arr[j]);
+        }
+    }
+    swap(arr[i + 1], arr[high]);
+    return (i + 1);
 }
