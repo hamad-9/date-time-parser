@@ -1,49 +1,42 @@
 #include <fstream>
 #include <iostream>
-#include <algorithm>
 #include <vector>
+#include "DateTime.h"
 #include "utils.h"
-using namespace std;
 
-
-const string INPUT_FILE = "input.txt";
-const string OUTPUT_FILE = "output.txt";
-
-
+const std::string INPUT_FILE = "input.txt";
+const std::string OUTPUT_FILE = "output.txt";
 
 int main() {
+    std::ifstream inputFile(INPUT_FILE);
+    std::ofstream outputFile(OUTPUT_FILE);
 
-    ifstream inputFile(INPUT_FILE);
-    if (!inputFile.is_open()) {
-        cerr << "Failed to open input file '" << INPUT_FILE << "'." << endl;
+    if (!inputFile.is_open() || !outputFile.is_open()) {
+        std::cerr << "Failed to open file." << std::endl;
         return 1;
     }
 
-    ofstream outputFile(OUTPUT_FILE);
-    if (!outputFile.is_open()) {
-        cerr << "Failed to open output file '" << OUTPUT_FILE << "'." << endl;
-        return 1;
-    }
-
-    vector<pair<long long, string>> dateTimeEpochPairs;
-    string line;
+    std::vector<DateTime> dateTimes;
+    std::string line;
 
     while (getline(inputFile, line)) {
-        long long epochTime = parseDateTimeToEpoch(line);
-        dateTimeEpochPairs.emplace_back(epochTime, line);
+        DateTime dt(line);
+        dateTimes.push_back(dt);
     }
 
-    // Sort by epoch time
-    sort(dateTimeEpochPairs.begin(), dateTimeEpochPairs.end());
+    quickSort(dateTimes, 0, dateTimes.size() - 1);
 
-    for (const auto &pair : dateTimeEpochPairs) {
-        outputFile << pair.second << " Epoch time: " << pair.first << endl;
+    for (const auto& dt : dateTimes) {
+        std::cout<<"pio pio"<<dt.toString()<<std::endl;
+        
+        long long epochTime = parseDateTimeToEpoch(dt.toString());
+        outputFile << dt.toString() << " Epoch time: " << epochTime << std::endl;
     }
 
     inputFile.close();
     outputFile.close();
 
-    cout<<"Finished Successfully"<<endl;
+    std::cout << "Finished Successfully" << std::endl;
 
     return 0;
 }
