@@ -29,7 +29,7 @@ int main() {
     for (const auto& dt : dateTimes) {
         std::cout<<"pio pio"<<dt.toString()<<std::endl;
         
-        long long epochTime = parseDateTimeToEpoch(dt.toString());
+        long long epochTime = dateTimeToEpoch(dt);
         outputFile << dt.toString() << " Epoch time: " << epochTime << std::endl;
     }
 
