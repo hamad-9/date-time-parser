@@ -9,6 +9,20 @@ const int SECONDS_PER_HOUR = 3600;
 const int SECONDS_PER_DAY = 86400;
 const vector<int> DAYS_PER_MONTH = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
+const int DAYS_PER_YEAR = 365;
+const int DAYS_PER_LEAP_YEAR = 366;
+
+const int EPOCH_START_YEAR = 1970;
+const int EPOCH_START_MONTH = 1;
+const int EPOCH_START_DAY = 1;
+const int EPOCH_START_HOUR = 0;
+const int EPOCH_START_MINUTE = 0;
+const int EPOCH_START_SECOND = 0;
+
+const char TimeBegin = 'T';
+const char DateSeparator = '-';
+const char TimeSeparator = ':';
+
 bool isLeapYear(int year)
 {
     return (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
@@ -18,14 +32,15 @@ int daysSinceEpoch(int year, int month, int day)
 {
     int days = 0;
 
-    for (int y = 1970; y < year; ++y)
+    for (int y = EPOCH_START_YEAR; y < year; ++y)
     {
-        days += isLeapYear(y) ? 366 : 365;
+        days += isLeapYear(y) ? DAYS_PER_LEAP_YEAR : DAYS_PER_YEAR;
     }
 
-    for (int m = 1; m < month; ++m)
+    for (int m = EPOCH_START_MONTH; m < month; ++m)
     {
         days += DAYS_PER_MONTH[m - 1];
+        // Add 29 of Feb if it's exists
         if (m == 2 && isLeapYear(year))
         {
             days += 1;
@@ -52,16 +67,21 @@ bool undefined(string &value)
 
 long long parseDateTimeToEpoch(const string &dateTime)
 {
-    int year = 1970, month = 1, day = 1, hour = 0, minute = 0, second = 0;
+    int year = EPOCH_START_YEAR; 
+    int month = EPOCH_START_MONTH; 
+    int day = EPOCH_START_DAY;
+    int hour = EPOCH_START_HOUR;
+    int minute = EPOCH_START_MINUTE;
+    int second = EPOCH_START_SECOND;
 
     // Find 'T' to split date and time
-    int tPos = dateTime.find('T');
+    int tPos = dateTime.find(TimeBegin);
     string datePart = dateTime.substr(0, tPos);
     string timePart = tPos != string::npos ? dateTime.substr(tPos + 1) : "";
 
     // Process date part
-    int firstDash = datePart.find('-');
-    int secondDash = datePart.find('-', firstDash + 1);
+    int firstDash = datePart.find(DateSeparator);
+    int secondDash = datePart.find(DateSeparator, firstDash + 1);
 
     if (firstDash != string::npos)
     {
@@ -90,8 +110,8 @@ long long parseDateTimeToEpoch(const string &dateTime)
     }
 
     // Process time part
-    int firstColon = timePart.find(':');
-    int secondColon = timePart.find(':', firstColon + 1);
+    int firstColon = timePart.find(TimeSeparator);
+    int secondColon = timePart.find(TimeSeparator, firstColon + 1);
 
     if (firstColon != string::npos)
     {
