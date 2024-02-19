@@ -16,6 +16,14 @@ public:
     DateTime(const std::string& dateTimeStr);
     bool operator <(const DateTime& other) const;
     std::string toString() const;
+
+    // Getter methods
+    int getYear() const;
+    int getMonth() const;
+    int getDay() const;
+    int getHour() const;
+    int getMinute() const;
+    int getSecond() const;
 };
 
 #endif // DATE_TIME_H
