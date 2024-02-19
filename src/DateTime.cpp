@@ -98,3 +98,11 @@ bool DateTime::undefined(std::string &value) {
     }
     return false;
 }
+
+
+int DateTime::getYear() const { return year; }
+int DateTime::getMonth() const { return month; }
+int DateTime::getDay() const { return day; }
+int DateTime::getHour() const { return hour; }
+int DateTime::getMinute() const { return minute; }
+int DateTime::getSecond() const { return second; }
