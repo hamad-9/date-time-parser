@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Define the test executable that includes both the test file and the source file needed
-add_executable(date-time-parser-tests main_test.cpp ../src/utils.cpp)
+add_executable(date-time-parser-tests main_test.cpp ../src/utils.cpp ../src/DateTime.cpp)
 
 # Include directories for header files
 target_include_directories(date-time-parser-tests PRIVATE ../include)
